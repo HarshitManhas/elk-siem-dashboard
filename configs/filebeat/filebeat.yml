@@ -1,0 +1,90 @@
+filebeat.inputs:
+- type: log
+  enabled: true
+  paths:
+    - /var/log/sample-data/firewall.log
+  tags: ["firewall", "security"]
+  fields:
+    log_type: firewall
+  fields_under_root: true
+
+- type: log
+  enabled: true
+  paths:
+    - /var/log/sample-data/auth.log
+    - /var/log/auth.log
+  tags: ["auth", "security"]
+  fields:
+    log_type: authentication
+  fields_under_root: true
+
+- type: log
+  enabled: true
+  paths:
+    - /var/log/sample-data/ids.log
+  tags: ["ids", "security"]
+  fields:
+    log_type: ids
+  fields_under_root: true
+
+- type: log
+  enabled: true
+  paths:
+    - /var/log/sample-data/web-access.log
+    - /var/log/apache2/access.log
+    - /var/log/nginx/access.log
+  tags: ["web", "access"]
+  fields:
+    log_type: web_access
+  fields_under_root: true
+
+- type: log
+  enabled: true
+  paths:
+    - /var/log/sample-data/application.log
+  tags: ["application"]
+  fields:
+    log_type: application
+  fields_under_root: true
+
+# System logs
+- type: system
+  enabled: true
+  modules:
+    - module: system
+      syslog:
+        enabled: true
+      auth:
+        enabled: true
+
+# Docker container logs
+- type: container
+  enabled: true
+  paths:
+    - /var/lib/docker/containers/*/*.log
+
+# Processors
+processors:
+- add_host_metadata:
+    when.not.contains.tags: forwarded
+- add_docker_metadata: ~
+
+# Output configuration
+output.logstash:
+  hosts: ["logstash:5044"]
+  bulk_max_size: 1024
+  template.settings:
+    index.number_of_shards: 1
+    index.codec: best_compression
+
+# Logging configuration
+logging.level: info
+logging.to_files: true
+logging.files:
+  path: /var/log/filebeat
+  name: filebeat
+  keepfiles: 7
+  permissions: 0644
+
+# Monitoring
+monitoring.enabled: true

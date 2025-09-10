@@ -1,0 +1,58 @@
+# ElastAlert configuration for SIEM alerting
+
+# The Elasticsearch hostname and port
+es_host: elasticsearch
+es_port: 9200
+
+# Index prefix for ElastAlert to store data
+writeback_index: elastalert_status
+
+# How often ElastAlert will query elasticsearch
+run_every:
+  minutes: 1
+
+# ElastAlert will buffer results from the most recent period
+buffer_time:
+  minutes: 15
+
+# The Elasticsearch URL
+es_url_prefix: ''
+
+# Connect with TLS to Elasticsearch
+use_ssl: False
+verify_certs: False
+
+# The index on which to search
+rules_folder: /opt/elastalert/rules
+
+# Set logging level
+logging:
+  version: 1
+  incremental: false
+  disable_existing_loggers: false
+  formatters:
+    logline:
+      format: '%(asctime)s %(levelname)+8s %(name)+20s %(message)s'
+    
+  handlers:
+    console:
+      class: logging.StreamHandler
+      formatter: logline
+      level: DEBUG
+      stream: ext://sys.stdout
+      
+    file:
+      class : logging.FileHandler
+      formatter: logline
+      level: INFO
+      filename: /opt/elastalert/elastalert.log
+      
+  loggers:
+    elastalert:
+      level: INFO
+      handlers: [console, file]
+      propagate: false
+      
+  root:
+    level: INFO
+    handlers: [console]

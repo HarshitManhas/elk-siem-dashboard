@@ -1,0 +1,54 @@
+# ElastAlert rule for detecting multiple failed login attempts
+
+name: Multiple Failed Login Attempts
+type: frequency
+index: siem-logs-*
+
+# Alert on more than 5 failed login attempts in 5 minutes
+num_events: 5
+timeframe:
+  minutes: 5
+
+# Filter for failed authentication events
+filter:
+- terms:
+    security_alert: ["failed_login"]
+
+# Group by source IP address
+query_key: src_ip
+
+# Alert content
+alert:
+- "email"
+- "debug"
+
+# Email configuration (update with your SMTP settings)
+smtp_host: localhost
+smtp_port: 587
+from_addr: siem-alerts@company.com
+email:
+- security-team@company.com
+
+alert_text: |
+  SECURITY ALERT: Multiple Failed Login Attempts Detected
+  
+  Source IP: {0}
+  Number of attempts: {1}
+  Time window: 5 minutes
+  
+  This could indicate a brute force attack in progress.
+  
+  Please investigate immediately.
+
+alert_text_args:
+- src_ip
+- num_matches
+
+# Include additional context
+include:
+- src_ip
+- user
+- service
+- auth_result
+- src_geoip.country_name
+- src_geoip.city_name

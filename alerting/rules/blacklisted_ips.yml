@@ -1,0 +1,74 @@
+# ElastAlert rule for detecting traffic from blacklisted IP addresses
+
+name: Blacklisted IP Traffic
+type: blacklist
+index: siem-logs-*
+
+# Define blacklisted IP ranges (update with your threat intelligence)
+blacklist:
+- src_ip
+- dst_ip
+
+compare_key: src_ip
+
+# Blacklisted IP addresses and ranges
+blacklist_rules:
+- "203.0.113.0/24"      # Example malicious network
+- "198.51.100.0/24"     # Example botnet range
+- "185.220.101.0/24"    # Example compromised hosts
+- "91.134.192.0/24"     # Example threat actor infrastructure
+- "198.98.51.0/24"      # Example C&C servers
+
+# Alert immediately on blacklisted IP traffic
+realert:
+  minutes: 15
+
+# Alert content
+alert:
+- "email"
+- "debug"
+
+# Email configuration
+smtp_host: localhost
+smtp_port: 587
+from_addr: siem-alerts@company.com
+email:
+- security-team@company.com
+
+alert_text: |
+  SECURITY ALERT: Traffic from Blacklisted IP Detected
+  
+  Blacklisted IP: {0}
+  Destination IP: {1}
+  Log Type: {2}
+  Timestamp: {3}
+  
+  This IP address is known to be associated with malicious activity.
+  
+  Source Details:
+  - Country: {4}
+  - City: {5}
+  - Event Category: {6}
+  
+  Immediate investigation and blocking recommended.
+
+alert_text_args:
+- src_ip
+- dst_ip
+- log_type
+- "@timestamp"
+- src_geoip.country_name
+- src_geoip.city_name
+- event_category
+
+# Include relevant context
+include:
+- "@timestamp"
+- src_ip
+- dst_ip
+- src_port
+- dst_port
+- log_type
+- event_category
+- severity
+- src_geoip
