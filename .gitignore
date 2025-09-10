@@ -1,0 +1,33 @@
+# Elasticsearch data
+data/elasticsearch/*
+!data/elasticsearch/.gitkeep
+
+# Logstash data
+data/logstash/*
+!data/logstash/.gitkeep
+
+# Logs
+*.log
+logs/*.log
+
+# Docker
+.env
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Temporary files
+*.tmp
+*.temp
