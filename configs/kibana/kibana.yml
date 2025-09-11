@@ -10,26 +10,11 @@ elasticsearch.password: ""
 xpack.security.enabled: false
 xpack.encryptedSavedObjects.encryptionKey: "a7a6311933d3503b89bc2dbc36572c33a6c10925682e591bffcab6911c06786d"
 
-# Monitoring
-monitoring.enabled: true
-monitoring.kibana.collection.enabled: false
-
 # Logging
-logging.dest: stdout
-logging.quiet: false
-logging.verbose: false
-
-# Default index pattern
-kibana.defaultAppId: "dashboard"
-kibana.index: ".kibana-siem"
+logging.appenders.console.type: console
+logging.appenders.console.layout.type: pattern
+logging.root.appenders: ["console"]
+logging.root.level: info
 
 # Maps configuration for geolocation visualization  
 map.includeElasticMapsService: true
-map.tilemap.url: "https://tiles.maps.elastic.co/v2/default/{z}/{x}/{y}.png?elastic_tile_service_tos=agree&my_app_name=kibana&my_app_version=8.11.0"
-
-# Dashboard settings
-data.search.timeout: 600000
-
-# Server settings
-server.maxPayload: 1048576
-server.shutdownTimeout: 30s

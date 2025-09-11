@@ -2,7 +2,7 @@ filebeat.inputs:
 - type: log
   enabled: true
   paths:
-    - /var/log/sample-data/firewall.log
+    - /usr/share/filebeat/sample-data/firewall.log
   tags: ["firewall", "security"]
   fields:
     log_type: firewall
@@ -11,7 +11,7 @@ filebeat.inputs:
 - type: log
   enabled: true
   paths:
-    - /var/log/sample-data/auth.log
+    - /usr/share/filebeat/sample-data/auth.log
     - /var/log/auth.log
   tags: ["auth", "security"]
   fields:
@@ -21,7 +21,7 @@ filebeat.inputs:
 - type: log
   enabled: true
   paths:
-    - /var/log/sample-data/ids.log
+    - /usr/share/filebeat/sample-data/ids.log
   tags: ["ids", "security"]
   fields:
     log_type: ids
@@ -30,7 +30,7 @@ filebeat.inputs:
 - type: log
   enabled: true
   paths:
-    - /var/log/sample-data/web-access.log
+    - /usr/share/filebeat/sample-data/web-access.log
     - /var/log/apache2/access.log
     - /var/log/nginx/access.log
   tags: ["web", "access"]
@@ -38,30 +38,11 @@ filebeat.inputs:
     log_type: web_access
   fields_under_root: true
 
-- type: log
-  enabled: true
-  paths:
-    - /var/log/sample-data/application.log
-  tags: ["application"]
-  fields:
-    log_type: application
-  fields_under_root: true
-
-# System logs
-- type: system
-  enabled: true
-  modules:
-    - module: system
-      syslog:
-        enabled: true
-      auth:
-        enabled: true
-
-# Docker container logs
-- type: container
-  enabled: true
-  paths:
-    - /var/lib/docker/containers/*/*.log
+# Docker container logs (disabled for testing)
+#- type: container
+#  enabled: true
+#  paths:
+#    - /var/lib/docker/containers/*/*.log
 
 # Processors
 processors:
@@ -86,5 +67,5 @@ logging.files:
   keepfiles: 7
   permissions: 0644
 
-# Monitoring
-monitoring.enabled: true
+# Monitoring disabled for simplicity
+monitoring.enabled: false

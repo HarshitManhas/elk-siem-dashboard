@@ -32,7 +32,7 @@ curl -X POST "$KIBANA_URL/api/saved_objects/index-pattern/siem-logs-*" \
 echo "Importing dashboard..."
 curl -X POST "$KIBANA_URL/api/saved_objects/_import" \
   -H "kbn-xsrf: true" \
-  -F file=@../dashboards/siem-dashboard.ndjson
+  -F file=@dashboards/siem-dashboard.ndjson
 
 echo "Dashboard setup complete!"
 echo "Access your SIEM dashboard at: $KIBANA_URL"

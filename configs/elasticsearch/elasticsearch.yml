@@ -32,10 +32,4 @@ indices.memory.index_buffer_size: 20%
 indices.queries.cache.size: 20%
 indices.fielddata.cache.size: 40%
 
-# Index lifecycle management
-xpack.ilm.enabled: true
-
-# Index templates for time-series data
-index.number_of_shards: 1
-index.number_of_replicas: 0
-index.refresh_interval: 30s
+# Index lifecycle management (ILM enabled by default)
