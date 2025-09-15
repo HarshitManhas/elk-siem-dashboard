@@ -1,41 +1,78 @@
 filebeat.inputs:
+# Real system authentication logs
 - type: log
   enabled: true
   paths:
-    - /usr/share/filebeat/sample-data/firewall.log
-  tags: ["firewall", "security"]
-  fields:
-    log_type: firewall
-  fields_under_root: true
-
-- type: log
-  enabled: true
-  paths:
-    - /usr/share/filebeat/sample-data/auth.log
     - /var/log/auth.log
-  tags: ["auth", "security"]
+    - /var/log/auth.log.*
+  tags: ["auth", "security", "real-data"]
   fields:
     log_type: authentication
+    data_source: "real"
   fields_under_root: true
+  exclude_lines: ['pam_unix\(cron:session\)']
+  multiline.pattern: '^[0-9]{4}-[0-9]{2}-[0-9]{2}T'
+  multiline.negate: true
+  multiline.match: after
 
+# Real system logs (syslog)
 - type: log
   enabled: true
   paths:
-    - /usr/share/filebeat/sample-data/ids.log
-  tags: ["ids", "security"]
+    - /var/log/syslog
+  tags: ["syslog", "system", "real-data"]
   fields:
-    log_type: ids
+    log_type: system
+    data_source: "real"
   fields_under_root: true
+  exclude_lines: ['CRON.*CMD']
 
+# Real kernel logs for security events
 - type: log
   enabled: true
   paths:
-    - /usr/share/filebeat/sample-data/web-access.log
+    - /var/log/kern.log
+  tags: ["kernel", "security", "real-data"]
+  fields:
+    log_type: kernel
+    data_source: "real"
+  fields_under_root: true
+  include_lines: ['iptables', 'denied', 'blocked', 'suspicious']
+
+# UFW firewall logs (if available)
+- type: log
+  enabled: true
+  paths:
+    - /var/log/ufw.log
+  tags: ["firewall", "ufw", "real-data"]
+  fields:
+    log_type: firewall
+    data_source: "real"
+  fields_under_root: true
+
+# Web server logs (if available)
+- type: log
+  enabled: true
+  paths:
     - /var/log/apache2/access.log
+    - /var/log/apache2/error.log
     - /var/log/nginx/access.log
-  tags: ["web", "access"]
+    - /var/log/nginx/error.log
+  tags: ["web", "real-data"]
   fields:
     log_type: web_access
+    data_source: "real"
+  fields_under_root: true
+
+# Keep sample data for comparison (disabled by default)
+- type: log
+  enabled: false
+  paths:
+    - /usr/share/filebeat/sample-data/auth.log
+  tags: ["auth", "security", "sample-data"]
+  fields:
+    log_type: authentication
+    data_source: "sample"
   fields_under_root: true
 
 # Docker container logs (disabled for testing)

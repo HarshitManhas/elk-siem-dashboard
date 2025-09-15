@@ -33,3 +33,8 @@ indices.queries.cache.size: 20%
 indices.fielddata.cache.size: 40%
 
 # Index lifecycle management (ILM enabled by default)
+
+# Single-node cluster settings
+cluster.routing.allocation.disk.watermark.low: 85%
+cluster.routing.allocation.disk.watermark.high: 90%
+cluster.routing.allocation.disk.watermark.flood_stage: 95%
